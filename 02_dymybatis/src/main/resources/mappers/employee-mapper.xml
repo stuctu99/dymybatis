@@ -1,0 +1,95 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+  <mapper namespace="employee">
+  
+ 	<resultMap id="employeeMap" type="com.mybatis.model.dto.Employee">
+		<id column="emp_id" property="empId"/>
+		<result column="emp_name" property="empName"/>
+		<result column="emp_no" property="empNo"/>
+		<result column="dept_code" property="deptCode"/>
+		<result column="job_code" property="jobCode"/>
+		<result column="sal_level" property="salLevel"/>
+		<result column="manager_id" property="managerId"/>
+		<result column="hire_date" property="hireDate"/>
+		<result column="ent_date" property="entDate"/>
+		<result column="ent_yn" property="entYn"/>
+
+	</resultMap>
+  
+  
+  	<select id="selectEmployeeAll" resultMap="employeeMap">
+		SELECT * FROM EMPLOYEE
+	</select>
+	
+<!-- 	파라미터 값을 불러올 때 사용하는 표현식
+		#{} : 데이터 타입에 맞춰 리터럴로 표시해주는 표현식
+				* setString, setInt, setDate...
+		${} : 문자로 표시해주는 표현식 
+			예) type="emp_id";
+				#{type} : 'emp_id'
+				${type} : emp_id
+-->
+	<select id="searchEmpByKeyword" resultMap="employeeMap" parameterType="map">
+<!-- 		SELECT * FROM EMPLOYEE -->
+<!-- 					<where> -->
+<!-- 					<if test = "keyword != null"> -->
+<!-- 						 ${type} LIKE '%'||#{keyword}||'%'   -->
+<!-- 										#{} 로 하면 setString이랑 똑같음. '이렇게' 들어감! --> 
+<!-- 		 									WHERE 'emp_id' like  --> 
+<!-- 					</if>				 -->
+<!-- 					<if test = "gender != null"> -->
+<!-- 							AND DECODE(SUBSTR(EMP_NO,8,1),'1','M','2','F','3','M','4','F') = #{gender} -->
+<!-- 					</if> -->
+<!-- 					</where> -->
+<!-- 				 -->
+<!-- 					SELECT * FROM( -->
+<!-- 							SELECT E.*, DECODE(SUBSTR(EMP_NO,8,1),'1','M','2','F','3','M','4','F') AS GENDER -->
+<!-- 							FROM EMPLOYEE E) -->
+<!-- 						WHERE  ${type} LIKE '%'||#{keyword}||'%'   -->
+<!-- 							AND GENDER = #{gender} 
+										, dto에 gender컬럼 추가-->
+										
+	<!-- 동적쿼리 이용
+		<if>태그
+			test = "조건식" parameter값 연산자 비교값
+			<if test="type=='emp_id'">
+			param.get("type").equals("emp_id")
+			
+	 -->
+	 SELECT * FROM(
+		SELECT E.*, DECODE(SUBSTR(EMP_NO,8,1),'1','M','2','F','3','M','4','F') AS GENDER 
+		FROM EMPLOYEE E) 
+<!-- 	 WHERE   -->
+<!-- 		<where> -->
+			<trim prefix="WHERE" prefixOverrides="AND|OR">
+				 <if test="type !=null and type !='' 
+					 and keyword !=null and keyword !=''" >
+				 	${type} LIKE '%'||#{keyword}||'%'
+				 </if>
+				 <if test="gender !=null and gender !=''">
+				 	AND gender = #{gender}
+				 </if>
+<!-- 				 <if test="salary !=null and salary >0 -->
+<!-- 				 		and salFlag !=null and salFlag !='' -->
+<!-- 				 		and salFlag=='ge'"> -->
+<!-- 				 	AND SALARY >= ${salary} -->
+<!-- 				 </if> -->
+<!-- 				 <if test="salary !=null and salary !='' -->
+<!-- 				 		and salFlag !=null and salFlag !='' -->
+<!-- 				 		and salFlag=='le'"> -->
+<!-- 				 	AND SALARY &lt; ${salary} -->
+<!-- 				 </if> -->
+				 <if test="salary !=null and salary>0">
+				 	<if test="salFlag =='ge'">
+				 		AND SALARY >= #{salary}
+				 	</if>
+				 	<if test="salFlag =='le'">
+				 		AND SALARY <![CDATA[<=]]> #{salary}
+				 	</if>
+				 </if>
+				 
+			</trim>
+<!-- 		</where> -->
+	</select>
+  
+</mapper>
