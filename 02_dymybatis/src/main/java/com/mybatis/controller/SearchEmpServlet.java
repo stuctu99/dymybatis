@@ -12,6 +12,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import com.mybatis.model.dto.Employee;
+import com.mybatis.model.service.DepartmentService;
 import com.mybatis.model.service.EmployeeService;
 
 /**
@@ -46,6 +47,9 @@ public class SearchEmpServlet extends HttpServlet {
 		}
 		String salFlag = request.getParameter("salFlag");
 		
+		String[] depts = request.getParameterValues("dept");
+		
+		
 		
 		Map<String,Object> pram = new HashMap<>();
 		
@@ -54,12 +58,16 @@ public class SearchEmpServlet extends HttpServlet {
 		pram.put("gender",gender);
 		pram.put("salary",salary);
 		pram.put("salFlag",salFlag);
+		pram.put("depts", depts);
 		
 		
 		List<Employee> employees = new EmployeeService().searchEmpByKeyword(pram);
 	
 		
 		request.setAttribute("employees", employees);
+		
+		request.setAttribute("departments", new DepartmentService().selectDepartment());
+		
 		request.getRequestDispatcher("/views/employee/employee.jsp").forward(request, response);
 		
 	}

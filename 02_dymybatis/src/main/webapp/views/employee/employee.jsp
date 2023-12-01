@@ -47,6 +47,24 @@
  					</td>
 				</tr>
 				<tr>
+					<td>
+						부서
+					</td>
+					<td>
+						<c:if test="${not empty departments }">
+							<c:forEach var="dept" items="${departments }">
+								<label>
+									<input name="dept" value="${dept.deptId }" type="checkbox">
+										${dept.deptTitle }
+										<c:if test="${vs.index!=0 && vs.index%4==0 }"> 
+											<br>
+										</c:if>
+								</label>
+							</c:forEach>
+						</c:if>	
+					</td>
+				</tr>
+				<tr>
 					<td colspan="2">
 						<input type="submit" value="검색">
 					</td>
@@ -55,6 +73,8 @@
 		</form>
 	</div>
 	
+	${employees }
+	
 	<table>
 		<tr>
 			<th>사원 번호</th>
@@ -62,7 +82,7 @@
 			<th>사원 주민번호</th>
 			<th>사원 이메일</th>
 			<th>사원 연락처</th>
-			<th>부서코드</th>
+			<th>부서명</th>
 			<th>잡코드</th>
 			<th>sal_level</th>
 			<th>salary</th>
@@ -82,8 +102,13 @@
 						<td><c:out value="${e.empNo}"/></td>
 						<td><c:out value="${e.email}"/></td>
 						<td><c:out value="${e.phone}"/></td>
-						<td><c:out value="${e.deptCode}"/></td>
-						<td><c:out value="${e.jobCode}"/></td>
+						
+						<td>
+							<a href="${pageContext.request.contextPath }/dept/deptview.do?deptCode=${e.deptCode.deptId}">
+								<c:out value="${e.deptCode.deptTitle}"/>
+							</a>						
+						</td>
+						<td><c:out value="${e.jobCode.jobName}"/></td>
 						<td><c:out value="${e.salLevel}"/></td>
 						<td><fmt:formatNumber type="currency" value="${e.salary }"/></td>
 						<td><fmt:formatNumber type="percent" value="${e.bonus }"/></td>

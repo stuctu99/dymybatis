@@ -1,6 +1,20 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE configuration PUBLIC "-//mybatis.org//DTD config 3.0//EN" "http://mybatis.org/dtd/mybatis-3-config.dtd" >
 <configuration>
+	<properties resource="driver.properties">
+	</properties>
+	<settings>
+		<!-- java가 null 대입했을 때 DB에 NULL값으로 처리하게 하는 옵션 -->
+		<setting name="jdbcTypeForNull" value="NULL"/>
+	</settings>
+	
+	<typeAliases>
+		<!-- 사용할 객체의 별칭을 부여하는 태그 -->
+		<typeAlias type="com.mybatis.model.dto.Employee" alias="employee"/>
+		<typeAlias type="com.mybatis.model.dto.Department" alias="department"/>
+		<typeAlias type="com.mybatis.model.dto.Job" alias="job"/>
+		
+	</typeAliases>
 	<environments default="dymybatis">
 		<!-- DB접속에 대한 환경정보 태그로 설정
 			environment 태그를 이용
@@ -9,10 +23,23 @@
 		 	<!-- 트랜젝션, connectionpool, 접속 정보(DB정보, url, 계정, 비밀번호) -->
 		 	<transactionManager type="JDBC"/>
 		 	<dataSource type="POOLED">
-		 		<property name="driver" value="oracle.jdbc.driver.OracleDriver"/>
-		 		<property name="url" value="jdbc:oracle:thin:@14.36.141.71:10001:xe"/>
-		 		<property name="username" value="BS"/>
-		 		<property name="password" value="BS"/>
+<!-- 		 		<property name="driver" value="oracle.jdbc.driver.OracleDriver"/> -->
+<!-- 		 		<property name="url" value="jdbc:oracle:thin:@14.36.141.71:10001:xe"/> -->
+<!-- 		 		<property name="username" value="BS"/> -->
+<!-- 		 		<property name="password" value="BS"/> -->
+					<property name="driver" value="${driver}"/>
+					<property name="url" value="${url}"/>
+					<property name="username" value="${user}"/>
+					<property name="password" value="${pw}"/>
+		 	</dataSource>
+		 </environment>
+		 <environment id="web">
+		 	<transactionManager type="JDBC"/>
+		 	<dataSource type="POOLED">
+					<property name="driver" value="${driver}"/>
+					<property name="url" value="${url}"/>
+					<property name="username" value="${user2}"/>
+					<property name="password" value="${pw2}"/>
 		 	</dataSource>
 		 </environment>
 	</environments>
@@ -20,5 +47,6 @@
 	<mappers>
 		<!-- sql문을 작성한 xml 파일의 경로를 알려주는 태그 -->
 		<mapper resource="/mappers/employee-mapper.xml"/>
+		<mapper resource="/mappers/department_mapper.xml"/>
 	</mappers>
 </configuration>

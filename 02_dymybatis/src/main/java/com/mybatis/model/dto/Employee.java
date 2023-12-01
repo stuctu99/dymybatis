@@ -6,11 +6,13 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import lombok.ToString;
 
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
+@ToString(exclude = "deptCode")
 public class Employee {
 
 	private int empId;
@@ -18,8 +20,10 @@ public class Employee {
 	private String empNo;
 	private String email;
 	private int phone;
-	private String deptCode;
-	private String jobCode;
+//	private String deptCode;
+	private Department deptCode;
+//	private String jobCode;
+	private Job jobCode;
 	private String salLevel;
 	private int salary;
 	private double bonus;

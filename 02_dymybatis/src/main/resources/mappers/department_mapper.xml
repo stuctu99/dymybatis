@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="dept">
+	<resultMap id="deptMap" type="department">
+		<id column="dept_id" property="deptId"/>
+		<result column = "dept_title" property="deptTitle"/>
+		<result column = "location_id" property="locationId"/>
+		<collection property="employees" resultMap="employee.employeeMap"/>
+	</resultMap>
+ 	<select id="selectDepartment" resultMap="deptMap" >
+ 		SELECT * FROM DEPARTMENT
+ 	</select>
+ 	<select id="selectDepartmentById" resultMap="deptMap" parameterType="string">
+ 		SELECT * FROM DEPARTMENT 
+ 			JOIN EMPLOYEE ON DEPT_CODE=DEPT_ID
+ 		WHERE DEPT_ID=#{deptCode}
+ 	</select>
+</mapper>

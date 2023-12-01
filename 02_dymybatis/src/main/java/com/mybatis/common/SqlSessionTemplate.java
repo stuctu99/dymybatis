@@ -21,4 +21,16 @@ public class SqlSessionTemplate {
 		}
 		return session;
 	}
+	
+	public static SqlSession getSessionWeb() {
+		SqlSession session=null;
+		String fileName =  "dymybatis-config.xml";
+		try {
+			new SqlSessionFactoryBuilder().build(Resources.getResourceAsStream(fileName),"web")
+										  .openSession(false);
+		}catch(IOException e) {
+			e.printStackTrace();
+		}
+		return session;
+	}
 }

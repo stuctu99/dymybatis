@@ -2,24 +2,40 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
   <mapper namespace="employee">
   
- 	<resultMap id="employeeMap" type="com.mybatis.model.dto.Employee">
+ 	<resultMap id="employeeMap" type="employee">
 		<id column="emp_id" property="empId"/>
 		<result column="emp_name" property="empName"/>
 		<result column="emp_no" property="empNo"/>
-		<result column="dept_code" property="deptCode"/>
-		<result column="job_code" property="jobCode"/>
+<!-- 		<result column="dept_code" property="deptCode"/> -->
+		<result column="email" property="email"/>
+		<result column="phone" property="phone"/>
+		<result column="salary" property="salary"/>
+<!-- 		<result column="job_code" property="jobCode"/> -->
 		<result column="sal_level" property="salLevel"/>
 		<result column="manager_id" property="managerId"/>
 		<result column="hire_date" property="hireDate"/>
 		<result column="ent_date" property="entDate"/>
 		<result column="ent_yn" property="entYn"/>
-
+		<!-- assosiation 1:1 관계의 객체를 가져올 수 있음-->
+		<association property="deptCode" resultMap="dept.deptMap"/> <!-- javaType="department"> -->
+<!-- 			<id column="dept_id" property="deptId"/> -->
+<!-- 			<result column="dept_title" property="deptTitle"/> -->
+<!-- 			<result column="location_id" property="locationId"/> -->
+<!-- 		</association> -->
+		<association property="jobCode" javaType="job"> <!-- com.mybatis.model.dto.Job (config에 job으로 별칭부여해줬음!) -->
+			<id column="job_code" property="jobCode"/>
+			<result column="job_name" property="jobName"/>	
+		</association>
 	</resultMap>
   
   
   	<select id="selectEmployeeAll" resultMap="employeeMap">
 		SELECT * FROM EMPLOYEE
+					LEFT JOIN DEPARTMENT ON DEPT_CODE = DEPT_ID
+					JOIN JOB USING(JOB_CODE)
+					<!-- job은 필수관계(다 갖고있음)라 LEFT JOIN 필요없음 -->
 	</select>
+
 	
 <!-- 	파라미터 값을 불러올 때 사용하는 표현식
 		#{} : 데이터 타입에 맞춰 리터럴로 표시해주는 표현식
@@ -80,13 +96,49 @@
 <!-- 				 	AND SALARY &lt; ${salary} -->
 <!-- 				 </if> -->
 				 <if test="salary !=null and salary>0">
-				 	<if test="salFlag =='ge'">
-				 		AND SALARY >= #{salary}
-				 	</if>
-				 	<if test="salFlag =='le'">
-				 		AND SALARY <![CDATA[<=]]> #{salary}
-				 	</if>
+<!-- 				 	<if test="salFlag =='ge'"> -->
+<!-- 				 		AND SALARY >= #{salary} -->
+<!-- 				 	</if> -->
+<!-- 				 	<if test="salFlag =='le'"> -->
+<!-- 				 		AND SALARY <![CDATA[<=]]> #{salary} -->
+<!-- 				 	</if> -->
+						<choose>
+							<when test="salFlag=='ge'">
+								AND SALARY >= #{salary} -->
+							</when>	
+							<otherwise>
+								AND SALARY <![CDATA[<=]]> #{salary} -->
+							</otherwise>
+						</choose>
 				 </if>
+				 
+<!-- 				 다중값에 처리하기 -->
+<!-- 				 dept_code = v1 OR dept_code = v2 OR dept_code=v3 
+						dept_code in(v1, v2, v3)
+						
+						forEach문 활용
+						collection : 배열이나 리스트를 설정하는 속성 
+											-> JSTL c:forEach items속성과 동일
+						item : 배열이나 리스트 값을 저장하는 변수명 설정
+											-> JSTL c:forEach var속성과 동일
+						open : 반복문을 시작할 때 출력할 값을 설정
+											-><c:if test="${vs.first}">값</c:if>
+						close : 반복문을 종료했을 때 출력할 값을 설정
+											-><c:if test="${vs.last}">값</c:if>						
+						separator : 반복할때마다 출력할 값을 설정
+						index : 배열의 인덱스 번호를 저장하는 변수명
+						
+						dept_code in ('D1', 'D2', 'D3')
+						
+-->
+				<if test="depts !=null and depts!=''">
+					AND DEPT_CODE IN
+					<foreach collection="depts" item="d" open="(" close=")" separator=","> 
+						#{d}
+					</foreach>
+				</if>
+				 
+				 
 				 
 			</trim>
 <!-- 		</where> -->
