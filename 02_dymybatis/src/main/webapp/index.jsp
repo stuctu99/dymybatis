@@ -18,15 +18,17 @@
 	</h4>
 
 	<h3>web계정에 있는 데이터 조회하기</h3>
+	
 	<h3>게시글 조회하기</h3>
-	<input type="text" name="boardNo"><button>조회</button>
-	게시글 내용 출력 + 게시글을 작성한 회원의 아이디, 이메일을 출력하기
 	
-	<input type="text" name="boardNo"><button>조회</button>
-	게시글 내용을 출력 + 댓글들 출력하기
-	
-	<button>회원 조회하기</button> 		
-	회원 정보 출력 + 회원이 등록한 게시글 정보 출력하기
+	<input type="text" name="boardNo"><button>조회</button><br>
+	게시글 내용 출력 + 게시글을 작성한 회원의 아이디, 이메일을 출력하기<br>
+	<br><br>
+	<input type="text" name="boardNo"><button>조회</button> <br>
+	게시글 내용을 출력 + 댓글들 출력하기<br>
+	<br><br>
+	<button>회원 조회하기</button> <br>		 
+	회원 정보 출력 + 회원이 등록한 게시글 정보 출력하기<br>
 	
 </body>
 </html>
